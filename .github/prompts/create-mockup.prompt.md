@@ -9,7 +9,7 @@ tools:
 
 ユーザーの要件をヒアリングして、プロジェクトの技術スタック（Vite + Vanilla TypeScript + Tailwind CSS v4）に沿ったUIモックアップを実装します。
 
-> **注意**: ターミナルコマンドを実行する際は **Bash** を使用すること。
+> **注意**: ターミナルコマンドは Bash で実行する。
 
 ---
 
@@ -33,7 +33,7 @@ tools:
 > - 参考サイトや気になるデザインがあれば教えてください（なくてもOK）
 > - 画像素材：Unsplash などの無償素材を使いますか？それともプレースホルダー（背景色のみ）で進めますか？」
 
-ユーザーが「おまかせ」と言った場合は、Step 1 で聞いたサイト種別に合わせて適切なカラーとテイストを自分で決めて、決定内容をユーザーに一言伝えてから進む。画像についても未回答の場合はプレースホルダーで進める。
+ユーザーが「おまかせ」と言った場合は、Step 1 で聞いたサイト種別に合わせて適切なカラーとテイストを自分で決め、決定内容をユーザーに一言伝えてそのまま実装に進む（承認を待つ必要はない）。画像についても未回答の場合はプレースホルダーで進める。
 
 ### カラーを決めたら @theme に定義する
 
@@ -46,11 +46,24 @@ tools:
   --color-primary: #2C4A7C;
   --color-secondary: #F4A261;
   --color-accent: #E76F51;
-  --color-base: #FAF7F2;
+  --color-surface: #FAF7F2;
 }
 ```
 
 `tailwind.config.js` は使わない（Tailwind CSS v4 のルール）。
+
+**⚠️ 色名の命名規則 — Tailwind 組み込みユーティリティとの衝突を避ける**
+
+`--color-<name>` の `<name>` に以下を使うと、既存の Tailwind ユーティリティ（フォントサイズ・ブレークポイント等）と名前が衝突してクラスの意味が曖昧になる。**必ず避けること:**
+
+| 避けるべき名前 | 衝突するユーティリティ |
+|---|---|
+| `base` | `text-base`（font-size: 1rem）|
+| `sm` / `md` / `lg` / `xl` | レスポンシブブレークポイント |
+| `full` / `auto` / `none` | `w-full`, `m-auto` 等 |
+| `inherit` / `current` / `transparent` | CSS キーワード |
+
+これらの代わりに `surface`, `canvas`, `paper`, `cream`, `dark`, `light` など、Tailwind ユーティリティと衝突しない意味の明確な名前を使う。
 
 ---
 
@@ -71,13 +84,13 @@ tools:
 
 ## Step 4: クリーンアップの確認
 
-`index.html` のデモコンテンツが残っている場合は、実装前に [figma-setup-env](figma-setup-env.prompt.md) プロンプトを実行するようユーザーに案内する。すでにクリア済みであればそのまま進む。
+`index.html` のデモコンテンツが残っている場合は、実装前のクリーンアップとして [figma-setup-env](figma-setup-env.prompt.md) プロンプトを実行するようユーザーに案内する（これは実装前の準備ステップであり、実装後のレビューとは別）。すでにクリア済みであればそのまま進む。
 
 ---
 
 ## Step 5: 実装する
 
-[copilot-instructions.md](../copilot-instructions.md) のガイドラインに従って実装すること。
+[copilot-instructions.md](../copilot-instructions.md) のガイドラインに従って実装すること。実装ルールはファイル配置・Tailwind・アイコン・画像・HTML要件の各セクションに分かれているので、該当セクションを参照しながら進める。
 
 ### ファイル配置のルール
 
@@ -173,4 +186,4 @@ curl -L "https://images.unsplash.com/photo-xxxxx?w=1200" -o public/images/hero.w
 2. `<pm> run build` を実行してTypeScriptエラーがないか確認する
 3. ユーザーに完成を報告し、次のページまたは修正要望を聞く
 
-レビューをより丁寧に行いたい場合は [figma-review-figma](figma-review-figma.prompt.md) プロンプトも利用できることを案内する。
+実装後のビジュアルレビューをより丁寧に行いたい場合は [figma-review-figma](figma-review-figma.prompt.md) プロンプトも利用できることを案内する。

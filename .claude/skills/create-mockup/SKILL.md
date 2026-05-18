@@ -42,11 +42,24 @@ description: UIモックアップを作成するスキル。ユーザーが「�
   --color-primary: #2C4A7C;
   --color-secondary: #F4A261;
   --color-accent: #E76F51;
-  --color-base: #FAF7F2;
+  --color-surface: #FAF7F2;
 }
 ```
 
 Tailwind CSS v4 なので `tailwind.config.js` は使わない。
+
+**⚠️ 色名の命名規則 — Tailwind 組み込みユーティリティとの衝突を避ける**
+
+`--color-<name>` の `<name>` に以下を使うと、既存の Tailwind ユーティリティ（フォントサイズ・ブレークポイント等）と名前が衝突してクラスの意味が曖昧になる。**必ず避けること:**
+
+| 避けるべき名前 | 衝突するユーティリティ |
+|---|---|
+| `base` | `text-base`（font-size: 1rem）|
+| `sm` / `md` / `lg` / `xl` | レスポンシブブレークポイント |
+| `full` / `auto` / `none` | `w-full`, `m-auto` 等 |
+| `inherit` / `current` / `transparent` | CSS キーワード |
+
+代替案: `surface`, `canvas`, `paper`, `cream`, `dark`, `light` など意味が明確な名前を使う。
 
 ---
 
@@ -164,11 +177,37 @@ createIcons({ icons: { ArrowRight, Menu } })
 
 ## Step 6: 実装後の確認
 
-実装が終わったら:
+実装が終わったら以下の順で確認する:
 
-1. `<pm> run dev` でdev serverを起動してブラウザで確認するようユーザーに案内する
-2. `<pm> run build` でTypeScriptエラーがないか確認する
-3. ユーザーに完成を報告し、次のページ or 修正要望を聞く
+### 1. クラス重複・命名衝突チェック（必須）
+
+HTML ファイルの各要素で同じクラスが複数回指定されていないか確認する:
+
+```bash
+# 同一要素内でのクラス重複を検出（例）
+grep -n 'class="' index.html | grep -oP 'class="[^"]*"' | tr ' ' '\n' | sort | uniq -d
+```
+
+チェック観点:
+- **クラスの重複**: 同じ `class` 属性内に同じクラス名が2回以上ある（例: `text-surface text-surface`）
+- **サイズ vs カラーの衝突**: `@theme` で定義した色名と Tailwind 組み込みユーティリティ名が被っていないか（Step 2 の命名規則を参照）
+- **意味の競合**: `text-sm` と `text-base` のようにフォントサイズ系クラスが同じ要素に複数ある
+
+### 2. ビルドエラーチェック
+
+```bash
+<pm> run build
+```
+
+TypeScript エラーや Vite のビルドエラーがないことを確認する。
+
+### 3. 動作確認
+
+`<pm> run dev` でdev serverを起動してブラウザで確認するようユーザーに案内する。
+
+### 4. 報告
+
+ユーザーに完成を報告し、次のページ or 修正要望を聞く。
 
 レビューをより丁寧に行いたい場合は `/figma:review-figma` コマンドも利用できることを案内する。
 
@@ -177,6 +216,8 @@ createIcons({ icons: { ArrowRight, Menu } })
 ## よくある落とし穴
 
 - Tailwind v4 は `@theme` でカスタムトークンを定義（`tailwind.config.js` は不要）
+- **`--color-base` は使わない**: `text-base`（font-size）と衝突する。`--color-surface` など別名を使う
+- **同一要素内のクラス重複**: `text-surface text-surface` のような重複は意図せず発生しやすい。実装後に必ず目視 or grep で確認する
 - パスエイリアスは `@` で `src/` を指す（TypeScript のみ。HTML ファイルからは使えない）
 - Lucide アイコンは `src/main.ts` で登録しないと HTML で表示されない
 - 画像は `public/images/` に置いてルート相対パス（`/images/...`）で参照する
