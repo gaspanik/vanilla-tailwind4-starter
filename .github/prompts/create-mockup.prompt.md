@@ -111,6 +111,51 @@ tools:
 - セマンティックなHTMLタグを使う（`header`, `main`, `footer`, `section`, `nav` 等）
 - 画像には意味のある `alt` テキストを設定する
 
+### アクセシビリティ規則（必須）
+
+**ナビゲーション構造**
+
+ナビゲーションは必ず `nav > ul > li > a` の構造にする：
+
+```html
+<!-- ❌ 避ける -->
+<nav>
+  <a href="#about">About</a>
+  <a href="#works">Works</a>
+</nav>
+
+<!-- ✅ 正しい -->
+<nav aria-label="メインナビゲーション">
+  <ul class="flex gap-6">
+    <li><a href="#about" class="hover:text-primary">About</a></li>
+    <li><a href="#works" class="hover:text-primary">Works</a></li>
+  </ul>
+</nav>
+```
+
+**大文字テキスト**
+
+HTMLに直接大文字で書かず、`uppercase` クラスでスタイルとして適用する。テキスト自体は先頭大文字・残り小文字で記述する：
+
+```html
+<!-- ❌ 避ける（スクリーンリーダーが1文字ずつ読み上げる） -->
+<a href="#concept">CONCEPT</a>
+<button>CONTACT US</button>
+
+<!-- ✅ 正しい -->
+<a href="#concept" class="uppercase">Concept</a>
+<button class="uppercase">Contact us</button>
+```
+
+ブランド名・固有名詞（例：`NIKE`, `NASA`）はそのまま大文字で書いて構わない。
+
+**その他のアクセシビリティ**
+
+- `<button>` にはテキストか `aria-label` を必ず付ける（アイコンのみのボタンには `aria-label` 必須）
+- フォームの `<input>` には対応する `<label>` を紐付ける（`for` / `id` でリンクする）
+- `<section>` / `<article>` には見出し（`h2` 以下）を含めるか `aria-label` を付ける
+- `<img>` の `alt` は内容を説明するテキストにする（装飾画像は `alt=""`）
+
 ### Lucideアイコン
 
 使用するアイコンは `src/main.ts` で登録してから HTML で参照する：
