@@ -69,15 +69,15 @@ vite-vanilla-ts-tailwind/
 └── README.md          # このファイル
 ```
 
-## 🤖 Claude Code コマンド
+## 🤖 AI コマンド
 
-[Claude Code](https://claude.ai/code) を使っている場合、Figma デザインをコードに変換するコマンドが利用できます。
+[Claude Code](https://claude.ai/code) と [GitHub Copilot](https://github.com/features/copilot)（VS Code）の両方で、Figma デザインをコードに変換するコマンドが利用できます。また、Figma を使わずに Tailwind CSS でUIモックアップを作成する `create-mockup` コマンドも利用できます。
 
 ### ワークフロー全体を一括実行
 
-```
-/figma-workflow <Figma URL>
-```
+| | Claude Code | GitHub Copilot |
+|---|---|---|
+| コマンド | `/figma-workflow <Figma URL>` | `/figma-workflow <Figma URL>` |
 
 実装 → レビューの2フェーズをサブエージェントが自動で順番に実行します。
 
@@ -85,19 +85,32 @@ vite-vanilla-ts-tailwind/
 
 ### 使い分け
 
-| シーン | コマンド |
-|---|---|
-| 初回（デモコンテンツをクリア） | `/figma:setup-env` |
-| Figma → コード（全自動） | `/figma-workflow <URL>` |
-| 2ページ目以降 | `/figma-workflow <URL> about.html` |
-| 実装だけやり直したい | `/figma:implement-figma <URL>` |
-| レビューだけやり直したい | `/figma:review-figma <URL>` |
+| シーン | Claude Code | GitHub Copilot |
+|---|---|---|
+| 初回（デモコンテンツをクリア） | `/figma:setup-env` | `/figma-setup-env` |
+| Figma → コード（全自動） | `/figma-workflow <URL>` | `/figma-workflow <URL>` |
+| 2ページ目以降 | `/figma-workflow <URL> about.html` | `/figma-workflow <URL> about.html` |
+| 実装だけやり直したい | `/figma:implement-figma <URL>` | `/figma-implement-figma <URL>` |
+| レビューだけやり直したい | `/figma:review-figma <URL>` | `/figma-review-figma <URL>` |
+| UIモックアップを作成 | 自動（スキル） | `/create-mockup` |
 
 ### 標準フロー
+
+**Claude Code:**
 
 ```
 # 1. デモコンテンツをクリア（初回のみ）
 /figma:setup-env
+
+# 2. Figma デザインを実装してレビューまで自動実行
+/figma-workflow <Figma URL>
+```
+
+**GitHub Copilot（VS Code）:**
+
+```
+# 1. デモコンテンツをクリア（初回のみ）
+/figma-setup-env
 
 # 2. Figma デザインを実装してレビューまで自動実行
 /figma-workflow <Figma URL>
