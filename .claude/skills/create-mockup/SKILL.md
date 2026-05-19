@@ -246,15 +246,50 @@ grep -n 'class="' index.html | grep -oP 'class="[^"]*"' | tr ' ' '\n' | sort | u
 
 TypeScript エラーや Vite のビルドエラーがないことを確認する。
 
-### 3. 動作確認
+### 3. 開発サーバーの起動
 
-`<pm> run dev` でdev serverを起動してブラウザで確認するようユーザーに案内する。
+ビルドが成功したら、開発サーバーをバックグラウンドで起動する。Vite は他のポートが使用中の場合、5174・5175… と自動でポートを変えるため、**起動後に実際のポートを取得してユーザーに伝える**こと。
+
+手順:
+
+1. `run_in_background: true` でサーバーを起動し、出力ファイルのパスを控える
+2. 2〜3秒待ってから出力ファイルを Read する
+3. `Local:   http://localhost:XXXX/` の行からポート番号を取得する
+4. そのURLをユーザーに案内する
+
+```bash
+# 出力ファイルを Read した後、ポートを抽出する例
+grep -oE 'localhost:[0-9]+' <出力ファイルパス> | head -1
+```
+
+> **補足**: このプロジェクトは Vite + Tailwind CSS v4 のため、プレビューパネルでは CSS/JS が処理されず真っ白になる。必ず開発サーバー経由で確認するよう案内すること。
 
 ### 4. 報告
 
 ユーザーに完成を報告し、次のページ or 修正要望を聞く。
 
-レビューをより丁寧に行いたい場合は `/figma:review-figma` コマンドも利用できることを案内する。
+実装完了を伝えた後、`AskUserQuestion` ツールで次のアクションを選択してもらう:
+
+```
+次に何をしますか？
+
+1. Figma にキャプチャとして取り込む（/figma:figma-generate-design）
+   → ブラウザのレンダリング結果をそのまま Figma に移植
+
+2. Figma ノードとして生成する（/figma:figma-use）
+   → コンポーネント・変数・オートレイアウトを持つデザインシステムとして作成
+
+3. Tailwind 変数を Figma Variables に移植する（/tailwind-to-figma）
+   → src/style.css の @theme トークンを Figma の Variables として登録
+
+4. このままで終了
+```
+
+選択に応じて対応するスキルを呼び出す:
+- **1 を選択** → `/figma:figma-generate-design` スキルを起動
+- **2 を選択** → `/figma:figma-use` スキルを起動
+- **3 を選択** → `/tailwind-to-figma` スキルを起動
+- **4 を選択** → 「お疲れ様でした！」と伝えて終了
 
 ---
 
