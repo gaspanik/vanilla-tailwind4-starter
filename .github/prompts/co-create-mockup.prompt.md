@@ -225,10 +225,65 @@ curl -L "https://images.unsplash.com/photo-xxxxx?w=1200" -o public/images/hero.w
 
 ## Step 6: 実装後の確認
 
-実装が終わったら：
+実装が終わったら以下の順で確認する：
 
-1. `<pm> run dev` で開発サーバーを起動してブラウザで確認するようユーザーに案内する
-2. `<pm> run build` を実行してTypeScriptエラーがないか確認する
-3. ユーザーに完成を報告し、次のページまたは修正要望を聞く
+### 1. クラス重複・命名衝突チェック（必須）
 
-実装後のビジュアルレビューをより丁寧に行いたい場合は [co-review-figma](co-review-figma.prompt.md) プロンプトも利用できることを案内する。
+HTML ファイルの各要素で同じクラスが複数回指定されていないか確認する：
+
+```bash
+# 同一要素内でのクラス重複を検出（例）
+grep -n 'class="' index.html | grep -oP 'class="[^"]*"' | tr ' ' '\n' | sort | uniq -d
+```
+
+チェック観点：
+- **クラスの重複**: 同じ `class` 属性内に同じクラス名が2回以上ある（例: `text-surface text-surface`）
+- **サイズ vs カラーの衝突**: `@theme` で定義した色名と Tailwind 組み込みユーティリティ名が被っていないか（Step 2 の命名規則を参照）
+- **意味の競合**: `text-sm` と `text-base` のようにフォントサイズ系クラスが同じ要素に複数ある
+
+### 2. ビルドエラーチェック
+
+```bash
+<pm> run build
+```
+
+TypeScript エラーや Vite のビルドエラーがないことを確認する。
+
+### 3. 開発サーバーの起動
+
+ビルドが成功したら、開発サーバーをバックグラウンドで起動する。Vite は他のポートが使用中の場合、5174・5175… と自動でポートを変えるため、**起動後に実際のポートを取得してユーザーに伝える**こと。
+
+手順：
+
+1. バックグラウンドでサーバーを起動し、出力を確認する
+2. `Local:   http://localhost:XXXX/` の行からポート番号を取得する
+3. そのURLをユーザーに案内する
+
+> **補足**: このプロジェクトは Vite + Tailwind CSS v4 のため、プレビューパネルでは CSS/JS が処理されず真っ白になる。必ず開発サーバー経由で確認するよう案内すること。
+
+### 4. 報告
+
+ユーザーに完成を報告し、次のページ or 修正要望を聞く。
+
+実装完了を伝えた後、次のアクションを選択してもらう：
+
+```
+次に何をしますか？
+
+1. Figma にキャプチャとして取り込む（/figma:figma-generate-design）
+   → ブラウザのレンダリング結果をそのまま Figma に移植
+
+2. Figma ノードとして生成する（/figma:figma-use）
+   → コンポーネント・変数・オートレイアウトを持つデザインシステムとして作成
+
+3. Tailwind 変数を Figma Variables に移植する（/tailwind-to-figma）
+   → src/style.css の @theme トークンを Figma の Variables として登録
+
+4. このままで終了
+```
+
+選択に応じて対応するツール・プロンプトを呼び出す：
+- **1 を選択** → `mcp_com_figma_mcp_generate_figma_design` ツールを呼び出す（事前に `/figma-generate-design` スキルをロードすること）
+- **2 を選択** → `mcp_com_figma_mcp_use_figma` ツールを呼び出す（事前に `/figma-use` スキルをロードすること）
+- **3 を選択** → [co-tailwind-to-figma](co-tailwind-to-figma.prompt.md) プロンプトを起動
+- **4 を選択** → 「お疲れ様でした！」と伝えて終了
