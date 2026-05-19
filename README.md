@@ -94,6 +94,18 @@ vite-vanilla-ts-tailwind/
 | レビューだけやり直したい | `/figma:review-figma <URL>` | `/figma-review-figma <URL>` |
 | UIモックアップを作成 | 自動（スキル） | `/create-mockup` |
 
+### デザイントークン管理
+
+Figma Variables と `src/style.css` の `@theme` トークンを双方向に同期するスキル、および `DESIGN.md` を生成するスキルです。
+
+| スキル | 用途 |
+|---|---|
+| `/figma-to-tailwind-html <Figma URL>` | Figma Variables → `src/style.css` の `@theme` トークンに書き出す |
+| `/tailwind-to-figma-html [Figma URL]` | `src/style.css` の `@theme` トークン → Figma Variables に書き出す |
+| `/create-design-md-html [Figma URL]` | コードベースまたは Figma からデザイン仕様書 `DESIGN.md` を生成する |
+
+`/tailwind-to-figma-html` と `/create-design-md-html` の引数は省略可能です。省略した場合、`/tailwind-to-figma-html` は新規 Figma ファイル「Design Tokens」を作成し、`/create-design-md-html` はコードベースを探索するかソースを選択するよう案内します。
+
 ### 標準フロー
 
 **Claude Code:**
