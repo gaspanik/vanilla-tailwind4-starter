@@ -282,8 +282,23 @@ TypeScript エラーや Vite のビルドエラーがないことを確認する
 4. このままで終了
 ```
 
+```
+次に何をしますか？
+
+1. Figma にキャプチャとして取り込む
+   → ブラウザのレンダリング結果をそのまま Figma に移植
+
+2. Figma ノードとして生成する
+   → コンポーネント・変数・オートレイアウトを持つデザインシステムとして作成
+
+3. Tailwind 変数を Figma Variables に移植する
+   → src/style.css の @theme トークンを Figma の Variables として登録
+
+4. このままで終了
+```
+
 選択に応じて対応するツール・プロンプトを呼び出す：
-- **1 を選択** → `mcp_com_figma_mcp_generate_figma_design` ツールを呼び出す（事前に `/figma-generate-design` スキルをロードすること）
-- **2 を選択** → `mcp_com_figma_mcp_use_figma` ツールを呼び出す（事前に `/figma-use` スキルをロードすること）
+- **1 を選択** → Figma MCP Serverの`generate_figma_design` ツールを呼び出してキャプチャを実行
+- **2 を選択** → Figma MCP Serverの`use_figma` ツールを呼び出して実行
 - **3 を選択** → [co-tailwind-to-figma](co-tailwind-to-figma.prompt.md) プロンプトを起動
 - **4 を選択** → 「お疲れ様でした！」と伝えて終了
