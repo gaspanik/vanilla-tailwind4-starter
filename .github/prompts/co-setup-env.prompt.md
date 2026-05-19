@@ -54,4 +54,4 @@ createIcons({ icons: {} })
 変更完了後、以下を報告する：
 
 - 変更したファイルの一覧
-- 次のステップとして「figma-implement」プロンプトで Figma URL を指定するよう案内する
+- 次のステップとして「co-implement-figma」プロンプトで Figma URL を指定するよう案内する

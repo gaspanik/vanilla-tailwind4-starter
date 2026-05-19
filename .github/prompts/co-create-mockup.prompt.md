@@ -84,7 +84,7 @@ tools:
 
 ## Step 4: クリーンアップの確認
 
-`index.html` のデモコンテンツが残っている場合は、実装前のクリーンアップとして [figma-setup-env](figma-setup-env.prompt.md) プロンプトを実行するようユーザーに案内する（これは実装前の準備ステップであり、実装後のレビューとは別）。すでにクリア済みであればそのまま進む。
+`index.html` のデモコンテンツが残っている場合は、実装前のクリーンアップとして [co-setup-env](co-setup-env.prompt.md) プロンプトを実行するようユーザーに案内する（これは実装前の準備ステップであり、実装後のレビューとは別）。すでにクリア済みであればそのまま進む。
 
 ---
 
@@ -231,4 +231,4 @@ curl -L "https://images.unsplash.com/photo-xxxxx?w=1200" -o public/images/hero.w
 2. `<pm> run build` を実行してTypeScriptエラーがないか確認する
 3. ユーザーに完成を報告し、次のページまたは修正要望を聞く
 
-実装後のビジュアルレビューをより丁寧に行いたい場合は [figma-review-figma](figma-review-figma.prompt.md) プロンプトも利用できることを案内する。
+実装後のビジュアルレビューをより丁寧に行いたい場合は [co-review-figma](co-review-figma.prompt.md) プロンプトも利用できることを案内する。

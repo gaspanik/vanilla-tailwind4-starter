@@ -73,11 +73,15 @@ vite-vanilla-ts-tailwind/
 
 [Claude Code](https://claude.ai/code) と [GitHub Copilot](https://github.com/features/copilot)（VS Code）の両方で、Figma デザインをコードに変換するコマンドが利用できます。また、Figma を使わずに Tailwind CSS でUIモックアップを作成する `create-mockup` コマンドも利用できます。
 
+> **💡 使用するエージェントに合わせて不要なディレクトリを削除してください：**
+> - Claude Code のみ使う場合 → `.github/prompts/` を削除
+> - GitHub Copilot のみ使う場合 → `.claude/` を削除
+
 ### ワークフロー全体を一括実行
 
 | | Claude Code | GitHub Copilot |
 |---|---|---|
-| コマンド | `/figma-workflow <Figma URL>` | `/figma-workflow <Figma URL>` |
+| コマンド | `/figma-workflow <Figma URL>` | `/co-figma-workflow <Figma URL>` |
 
 実装 → レビューの2フェーズをサブエージェントが自動で順番に実行します。
 
@@ -87,12 +91,12 @@ vite-vanilla-ts-tailwind/
 
 | シーン | Claude Code | GitHub Copilot |
 |---|---|---|
-| 初回（デモコンテンツをクリア） | `/figma:setup-env` | `/figma-setup-env` |
-| Figma → コード（全自動） | `/figma-workflow <URL>` | `/figma-workflow <URL>` |
-| 2ページ目以降 | `/figma-workflow <URL> about.html` | `/figma-workflow <URL> about.html` |
-| 実装だけやり直したい | `/figma:implement-figma <URL>` | `/figma-implement-figma <URL>` |
-| レビューだけやり直したい | `/figma:review-figma <URL>` | `/figma-review-figma <URL>` |
-| UIモックアップを作成 | 自動（スキル） | `/create-mockup` |
+| 初回（デモコンテンツをクリア） | `/figma:setup-env` | `/co-setup-env` |
+| Figma → コード（全自動） | `/figma-workflow <URL>` | `/co-figma-workflow <URL>` |
+| 2ページ目以降 | `/figma-workflow <URL> about.html` | `/co-figma-workflow <URL> about.html` |
+| 実装だけやり直したい | `/figma:implement-figma <URL>` | `/co-implement-figma <URL>` |
+| レビューだけやり直したい | `/figma:review-figma <URL>` | `/co-review-figma <URL>` |
+| UIモックアップを作成 | 自動（スキル） | `/co-create-mockup` |
 
 ### デザイントークン管理
 
@@ -122,10 +126,10 @@ Figma Variables と `src/style.css` の `@theme` トークンを双方向に同�
 
 ```
 # 1. デモコンテンツをクリア（初回のみ）
-/figma-setup-env
+/co-setup-env
 
 # 2. Figma デザインを実装してレビューまで自動実行
-/figma-workflow <Figma URL>
+/co-figma-workflow <Figma URL>
 ```
 
 ## 📄 マルチページビルド

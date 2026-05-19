@@ -10,7 +10,7 @@ tools:
   - com.figma.mcp/mcp/get_variable_defs
 ---
 
-レビューするFigma URLをチャットで指定してください（省略した場合は、直前の `figma-implement-figma` で実装したデザインを対象にします）。
+レビューするFigma URLをチャットで指定してください（省略した場合は、直前の `co-implement-figma` で実装したデザインを対象にします）。
 
 Figma URLが無効またはアクセス不能な場合（`get_screenshot` または `get_design_context` がエラーを返した場合）は、処理を中断してユーザーに正しいURLの再入力を求めること。
 
