@@ -295,6 +295,8 @@ TypeScript エラーや Vite のビルドエラーがないことを確認する
    → src/style.css の @theme トークンを Figma の Variables として登録
 
 4. このままで終了
+
+※ 1〜3 は Figma MCP Server の接続が必要です。動作しない場合は MCP サーバーの設定をご確認ください。
 ```
 
 選択に応じて対応するツール・プロンプトを呼び出す：
@@ -302,3 +304,5 @@ TypeScript エラーや Vite のビルドエラーがないことを確認する
 - **2 を選択** → Figma MCP Serverの`use_figma` ツールを呼び出して実行
 - **3 を選択** → [co-tailwind-to-figma](co-tailwind-to-figma.prompt.md) プロンプトを起動
 - **4 を選択** → 「お疲れ様でした！」と伝えて終了
+
+> **失敗時の案内**: 1〜3 の操作でエラーが発生した場合や何も起きない場合は、「Figma MCP Server が接続されていない可能性があります。VS Code の MCP サーバー設定を確認してください。」とユーザーに伝える。
