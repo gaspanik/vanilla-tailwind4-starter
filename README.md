@@ -61,11 +61,17 @@ vite-vanilla-ts-tailwind/
 │   ├── main.ts        # エントリーポイント
 │   └── style.css      # Tailwind CSSのインポート
 ├── .claude/           # Claude Code 設定
-│   ├── commands/figma/    # スラッシュコマンド
-│   └── skills/figma-workflow/ # ワークフロースキル
+│   ├── commands/      # スラッシュコマンド
+│   └── skills/        # スキル
+├── .github/           # GitHub 設定
+│   ├── prompts/           # Copilot カスタムプロンプト
+│   └── copilot-instructions.md # Copilot 指示ファイル
+├── CLAUDE.md          # Claude Code プロジェクト指示
 ├── tsconfig.json      # TypeScript設定
 ├── vite.config.ts     # Vite設定（マルチページビルド対応）
 ├── package.json       # 依存関係とスクリプト
+├── .editorconfig      # エディタ設定
+├── .gitignore
 └── README.md          # このファイル
 ```
 
