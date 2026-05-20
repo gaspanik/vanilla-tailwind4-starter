@@ -187,8 +187,8 @@ curl -L "https://images.unsplash.com/photo-xxxxx?w=1200" -o public/images/hero.w
 
 ```html
 <!-- TODO: 画像に差し替える -->
-<div class="bg-gray-200 flex items-center justify-center w-full h-64">
-  <span class="text-gray-400 text-sm">Hero Image</span>
+<div class="bg-neutral-200 flex items-center justify-center w-full h-64">
+  <span class="text-neutral-400 text-sm">Hero Image</span>
 </div>
 ```
 

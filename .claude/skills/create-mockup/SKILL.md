@@ -184,8 +184,8 @@ createIcons({ icons: { ArrowRight, Menu } })
 - **プレースホルダーで進める場合**: 背景色 + テキストで代替し、後から差し替えやすいようコメントを入れる
   ```html
   <!-- TODO: 画像に差し替える -->
-  <div class="bg-gray-200 flex items-center justify-center w-full h-64">
-    <span class="text-gray-400 text-sm">Hero Image</span>
+  <div class="bg-neutral-200 flex items-center justify-center w-full h-64">
+    <span class="text-neutral-400 text-sm">Hero Image</span>
   </div>
   ```
 

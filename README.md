@@ -207,8 +207,8 @@ import { something } from '@/utils'
 
 ```html
 <div class="flex items-center gap-2">
-  <h1 class="font-medium text-gray-900 text-2xl">Hello Tailwind!</h1>
-  <p class="text-gray-600">ユーティリティクラスを使って簡単にスタイリング</p>
+  <h1 class="font-medium text-neutral-900 text-2xl">Hello Tailwind!</h1>
+  <p class="text-neutral-600">ユーティリティクラスを使って簡単にスタイリング</p>
 </div>
 ```
 
