@@ -255,9 +255,15 @@ TypeScript エラーや Vite のビルドエラーがないことを確認する
 
 手順：
 
-1. バックグラウンドでサーバーを起動し、出力を確認する
-2. `Local:   http://localhost:XXXX/` の行からポート番号を取得する
-3. そのURLをユーザーに案内する
+1. `run_in_background: true` でサーバーを起動し、出力ファイルのパスを控える
+2. 2〜3秒待ってから出力ファイルを Read する
+3. `Local:   http://localhost:XXXX/` の行からポート番号を取得する
+4. そのURLをユーザーに案内する
+
+```bash
+# 出力ファイルを Read した後、ポートを抽出する例
+grep -oE 'localhost:[0-9]+' <出力ファイルパス> | head -1
+```
 
 > **補足**: このプロジェクトは Vite + Tailwind CSS v4 のため、プレビューパネルでは CSS/JS が処理されず真っ白になる。必ず開発サーバー経由で確認するよう案内すること。
 
@@ -270,23 +276,8 @@ TypeScript エラーや Vite のビルドエラーがないことを確認する
 ```
 次に何をしますか？
 
-1. Figma にキャプチャとして取り込む（/figma:figma-generate-design）
-   → ブラウザのレンダリング結果をそのまま Figma に移植
-
-2. Figma ノードとして生成する（/figma:figma-use）
-   → コンポーネント・変数・オートレイアウトを持つデザインシステムとして作成
-
-3. Tailwind 変数を Figma Variables に移植する（/tailwind-to-figma）
-   → src/style.css の @theme トークンを Figma の Variables として登録
-
-4. このままで終了
-```
-
-```
-次に何をしますか？
-
 1. Figma にキャプチャとして取り込む
-   → ブラウザのレンダリング結果をそのまま Figma に移植
+   → ブラウザのレンダリング結果をそのまま Figma に画像として移植
 
 2. Figma ノードとして生成する
    → コンポーネント・変数・オートレイアウトを持つデザインシステムとして作成
@@ -295,14 +286,17 @@ TypeScript エラーや Vite のビルドエラーがないことを確認する
    → src/style.css の @theme トークンを Figma の Variables として登録
 
 4. このままで終了
-
-※ 1〜3 は Figma MCP Server の接続が必要です。動作しない場合は MCP サーバーの設定をご確認ください。
 ```
 
 選択に応じて対応するツール・プロンプトを呼び出す：
-- **1 を選択** → Figma MCP Serverの`generate_figma_design` ツールを呼び出してキャプチャを実行
-- **2 を選択** → Figma MCP Serverの`use_figma` ツールを呼び出して実行
-- **3 を選択** → [co-tailwind-to-figma](co-tailwind-to-figma.prompt.md) プロンプトを起動
+- **1 を選択** → 以下の手順で `generate_figma_design` MCP ツールを**直接**呼ぶ：
+  1. Step 6.3 で起動した開発サーバーの URL（例: `http://localhost:5173`）を使用する
+  2. まず `outputMode` なしで `generate_figma_design` を呼び、取り込み先の選択肢を表示する
+  3. ユーザーが選択したら `outputMode` とURLを指定して再度呼ぶ
+  4. 返却された `captureId` を使い、5秒おきに最大10回ポーリングして完了を待つ
+  - **注意**: `use_figma` は呼ばない。純粋なキャプチャのみ。
+- **2 を選択** → `use_figma` MCP ツールを直接呼び出して実行する
+- **3 を選択** → [co-tailwind-to-figma](co-tailwind-to-figma.prompt.md) プロンプトを起動する
 - **4 を選択** → 「お疲れ様でした！」と伝えて終了
 
 > **失敗時の案内**: 1〜3 の操作でエラーが発生した場合や何も起きない場合は、「Figma MCP Server が接続されていない可能性があります。VS Code の MCP サーバー設定を確認してください。」とユーザーに伝える。

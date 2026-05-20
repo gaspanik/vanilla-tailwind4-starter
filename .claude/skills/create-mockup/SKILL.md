@@ -273,8 +273,8 @@ grep -oE 'localhost:[0-9]+' <出力ファイルパス> | head -1
 ```
 次に何をしますか？
 
-1. Figma にキャプチャとして取り込む（/figma:figma-generate-design）
-   → ブラウザのレンダリング結果をそのまま Figma に移植
+1. Figma にキャプチャとして取り込む
+   → ブラウザのレンダリング結果をそのまま Figma に画像として移植（generate_figma_design）
 
 2. Figma ノードとして生成する（/figma:figma-use）
    → コンポーネント・変数・オートレイアウトを持つデザインシステムとして作成
@@ -286,7 +286,12 @@ grep -oE 'localhost:[0-9]+' <出力ファイルパス> | head -1
 ```
 
 選択に応じて対応するスキルを呼び出す:
-- **1 を選択** → `/figma:figma-generate-design` スキルを起動
+- **1 を選択** → 以下の手順で `generate_figma_design` MCP ツールを**直接**呼ぶ（スキル経由にしない）:
+  1. Step 6.3 で起動した開発サーバーの URL（例: `http://localhost:5173`）を使用する
+  2. まず `outputMode` なしで `generate_figma_design` を呼び、取り込み先の選択肢を表示する
+  3. ユーザーが選択したら `outputMode` とURLを指定して再度呼ぶ
+  4. 返却された `captureId` を使い、5秒おきに最大10回ポーリングして完了を待つ
+  - **注意**: `/figma:figma-generate-design` スキルは呼ばない。`use_figma` も呼ばない。純粋なキャプチャのみ。
 - **2 を選択** → `/figma:figma-use` スキルを起動
 - **3 を選択** → `/tailwind-to-figma` スキルを起動
 - **4 を選択** → 「お疲れ様でした！」と伝えて終了
