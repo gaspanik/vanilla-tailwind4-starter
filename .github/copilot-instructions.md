@@ -85,6 +85,68 @@ Tailwind の標準スケールを優先する（1単位 = 4px）：
 
 任意値は標準スケール・テーマ変数で実現できない場合のみ使用する。複数箇所で使うなら `@theme` に追加する。
 
+### 大文字テキストの表示
+
+HTMLに直接大文字で書かず、`uppercase` クラスでスタイルとして適用する。テキスト自体は先頭大文字・残り小文字で記述。
+
+```html
+<!-- ❌ 避ける -->
+<a href="#about">ABOUT</a>
+
+<!-- ✅ 正しい -->
+<a href="#about" class="uppercase">About</a>
+```
+
+スクリーンリーダーが大文字を1文字ずつ読み上げるのを防ぐため。ブランド名などの固有名詞はそのままでよい。
+
+### 共有クラスの集約（`*:` バリアント）
+
+3つ以上の兄弟要素が同じクラスを2つ以上持つ場合、親要素に `*:` バリアントでまとめる。
+
+```html
+<!-- ❌ 避ける -->
+<ul>
+  <li><a href="#about" class="hover:text-white">About</a></li>
+  <li><a href="#works" class="hover:text-white">Works</a></li>
+  <li><a href="#contact" class="hover:text-white">Contact</a></li>
+</ul>
+
+<!-- ✅ 正しい -->
+<ul class="*:hover:text-white">
+  <li><a href="#about">About</a></li>
+  <li><a href="#works">Works</a></li>
+  <li><a href="#contact">Contact</a></li>
+</ul>
+```
+
+`*:` は直接の子要素にのみ適用される（孫要素には影響しない）。
+
+### カラートークンの一元管理
+
+`neutral-*` や `gray-*` などの Tailwind スケールを直接使わず、プロジェクト固有の色はすべて `@theme` トークンとして定義する。ダーク背景用・ホバー用など用途別にトークンを分けて定義すること。
+
+```css
+/* ✅ src/style.css */
+@theme {
+  --color-dark: #111111;
+  --color-dark-hover: #262626;
+  --color-muted: #666666;
+  --color-muted-dark: #a3a3a3;   /* ダーク背景上のサブテキスト */
+  --color-border: #e5e5e5;
+  --color-border-dark: #404040;  /* ダーク背景上のボーダー */
+}
+```
+
+```html
+<!-- ❌ 避ける -->
+<p class="text-neutral-400">...</p>
+<div class="border-neutral-800">...</div>
+
+<!-- ✅ 正しい -->
+<p class="text-muted-dark">...</p>
+<div class="border-border-dark">...</div>
+```
+
 ## デザインシステム
 
 プロジェクトルートに `DESIGN.md` が存在する場合は、UI の変更を実装する前に必ず読む。このファイルにはプロジェクトのデザイントークン（カラー・タイポグラフィ・スペーシング・ボーダー半径）とコンポーネントのガイドラインが記載されている。
