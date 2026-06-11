@@ -50,7 +50,7 @@ TypeScriptの型チェック後、ビルド結果は `dist` ディレクトリ�
 ## 📁 プロジェクト構成
 
 ```
-vite-vanilla-ts-tailwind/
+vanilla-tailwind4-starter/
 ├── index.html         # トップページ
 ├── about.html         # Aboutページ
 ├── public/            # 静的ファイル
@@ -147,7 +147,7 @@ Figma Variables と `src/style.css` の `@theme` トークンを双方向に同�
 プロジェクトのルートディレクトリに新しいHTMLファイルを追加するだけで、自動的にビルド対象に含まれます：
 
 ```
-vite-vanilla-ts-tailwind/
+vanilla-tailwind4-starter/
 ├── index.html
 ├── about.html
 ├── contact.html
