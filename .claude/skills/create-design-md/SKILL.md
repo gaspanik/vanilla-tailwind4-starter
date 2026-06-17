@@ -62,7 +62,7 @@ Then skip directly to **Step 4 (lint validation)** — Step 3 is not needed.
 
 Read the following files in order to gather design system information:
 
-1. **Find the main CSS file** — run `grep -rl --include="*.css" --exclude-dir=node_modules --exclude-dir=dist '@import ["'"'"']tailwindcss' . 2>/dev/null` to locate CSS files that import Tailwind. Read the first match (typically `src/index.css` or `src/app.css`). Extract color and spacing tokens from the `@theme` block.
+1. **Find the main CSS file** — search for CSS files containing `@import "tailwindcss"` or `@import 'tailwindcss'` across the project (excluding `node_modules`/`dist`). Read the first match (typically `src/index.css` or `src/app.css`) and extract color and spacing tokens from the `@theme` block.
 2. `src/components/` — review component files to understand style patterns (buttons, cards, etc.)
 3. `tailwind.config.*` or `vite.config.*` — check for additional configuration
 4. `package.json` — get the project name
@@ -75,6 +75,11 @@ Collect:
 - Border radius
 - Component style patterns (buttons, etc.)
 - Overall design mood and tone
+
+**When the codebase yields no meaningful palette** (e.g. a fresh starter whose `@theme` has only font tokens):
+
+- If an orchestrator brief includes a **color preference**, use it as the basis for the palette
+- Otherwise, ask the user with `AskUserQuestion` before inventing colors — options like "Leave it to me", "Monochrome + accent", "Light & colorful", "Dark tone" (Other accepts brand hex values). Do not silently decide the palette on the user's behalf
 
 ### Figma mode
 
@@ -101,7 +106,9 @@ description: <one-line project description>
 colors:
   primary: "#XXXXXX"
   secondary: "#XXXXXX"
-  # add tertiary, neutral, surface, etc. as needed
+  surface: "#XXXXXX"
+  border: "#XXXXXX"
+  # add tertiary, neutral, muted, surface-alt, etc. as needed
 typography:
   h1:
     fontFamily: <font name>
@@ -134,6 +141,12 @@ components:
     padding: <px>
   button-primary-hover:
     backgroundColor: "{colors.secondary}"
+  button-outline:
+    backgroundColor: "{colors.surface}"  # concrete color, never `transparent` (see lint notes)
+    textColor: "{colors.primary}"
+    borderColor: "{colors.border}"       # keeps `colors.border` from being flagged as orphaned
+    rounded: "{rounded.md}"
+    padding: <px>
   # add other components as needed
 ---
 ```
@@ -146,6 +159,8 @@ components:
 - **fontWeight**: number (e.g. `400`, `700`)
 - **lineHeight**: number or Dimension (e.g. `1.6` or `24px`)
 - `colors.primary` is required — omitting it triggers a `missing-primary` warning
+- **Utility colors are part of the spec**: real pages always need a `border` color (dividers, outlines, card borders), and designs with tinted sections or placeholder blocks need a subtle background variant (e.g. `surface-alt`). Define these in the `colors` frontmatter — **never in prose only**. Downstream pipeline steps (tailwind-typescale, create-mockup) read tokens from the frontmatter; a color mentioned only in the body is invisible to them
+- **Reference every custom color from at least one component.** The linter's orphaned-token check exempts only the MD3 standard families (`primary`, `secondary`, `tertiary`, `error`, `surface`, `background`, `outline`); every other color name (`accent`, `muted`, `border`, `surface-alt`, …) gets flagged unless a component references it. Components accept arbitrary property names, so wire them up like `button-outline.borderColor: "{colors.border}"`, `caption.textColor: "{colors.muted}"`
 - Ensure WCAG AA contrast ratio (4.5:1) for `backgroundColor` / `textColor` pairs in components
 - **Component completeness**: `button-*` components that define `backgroundColor` must also define `padding`; omitting `padding` leaves button height undefined in previews
 
@@ -191,6 +206,12 @@ components:
 
 **Note:** Sections with insufficient information may be omitted, but any included sections must follow the order above.
 
+### Internal consistency rules
+
+- **Components / Do's and Don'ts must not contradict each other or the frontmatter.** Before finishing, re-read the body against the frontmatter tokens and the Don'ts list
+- When showing example classes in Components, reference the defined tokens — hex values or token-based class names (e.g. `bg-primary` assuming `--color-primary`) — **not Tailwind default palette classes** like `bg-neutral-700`. This is especially important if a Don't forbids using `neutral-*` / `gray-*` directly
+- Values mentioned in the body (max-width, padding, font sizes, radius) must match the frontmatter tokens
+
 ## Step 4: Lint validation
 
 After generating the file, run the linter. Replace `<pm>` with the package manager used in this project (`npx`, `pnpm dlx`, `yarn dlx`, etc.):
@@ -204,6 +225,10 @@ Review the results:
 - **error** → fix `DESIGN.md` and re-run the linter (repeat until no errors remain)
 - **warning** → review and fix where possible (contrast ratio issues, orphaned tokens, etc.)
 - **info** → no action needed
+
+> **⚠️ Never fix an orphaned-token warning by deleting a utility color** (`border`, `surface-alt`, `muted`, etc.) from the frontmatter. Instead, reference it from a component (e.g. `button-outline.borderColor: "{colors.border}"`) or leave the warning as-is. Moving the definition into prose breaks the downstream pipeline, which reads colors from the frontmatter only. (Only the MD3 standard families `primary` / `secondary` / `tertiary` / `error` / `surface` / `background` / `outline` are exempt from this check.)
+>
+> **⚠️ Never use `transparent` (or any alpha / non-opaque value) as a component `backgroundColor`.** The contrast-ratio rule converts colors to sRGB and computes textColor contrast against them, so `transparent` produces a bogus below-AA warning. For outline / ghost buttons, set `backgroundColor` to the concrete page surface color (e.g. `"{colors.surface}"`) instead. When fixing a contrast warning, substitute the concrete color — **never delete other tokens as part of the fix**.
 
 ### Common lint errors and fixes
 
@@ -220,3 +245,5 @@ Report the following:
 - Path to the generated `DESIGN.md`
 - Lint result summary (number of errors / warnings / info)
 - Overview of key design tokens (colors, typography)
+
+**In orchestrated runs** (invoked from setup-project or another pipeline): keep this report to 1–2 lines and continue immediately with the orchestrator's next step in the same response — do not end the turn here.

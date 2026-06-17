@@ -25,17 +25,9 @@ Sets up a harmonious typography scale for Tailwind CSS v4 projects.
 
 Run all checks before asking the user anything.
 
-```bash
-# 1. Find the Tailwind CSS v4 entry file
-#    Primary signal: @import "tailwindcss" or @import 'tailwindcss'
-grep -rl --include="*.css" --exclude-dir=node_modules --exclude-dir=dist '@import ["'"'"']tailwindcss' . 2>/dev/null
-
-# 2. Check for DESIGN.md
-ls DESIGN.md 2>/dev/null || echo "not found"
-
-# 3. Check for tailwind.config.js (v3 indicator)
-ls tailwind.config.js 2>/dev/null && echo "v3 config found" || echo "no v3 config"
-```
+1. Search for CSS files containing `@import "tailwindcss"` or `@import 'tailwindcss'` across the project (excluding `node_modules`/`dist`)
+2. Check whether `DESIGN.md` exists in the project root
+3. Check whether `tailwind.config.js` exists in the project root (v3 indicator)
 
 ### Step 0-A: Determine the target CSS file
 
@@ -45,9 +37,7 @@ ls tailwind.config.js 2>/dev/null && echo "v3 config found" || echo "no v3 confi
 
 **If no file found:** Run a fallback search for `@theme` blocks:
 
-```bash
-grep -rl --include="*.css" --exclude-dir=node_modules --exclude-dir=dist '@theme' . 2>/dev/null
-```
+Search for CSS files containing an `@theme` block across the project (excluding `node_modules`/`dist`).
 
 Apply the same 1 / multiple / none logic above.
 
@@ -57,9 +47,7 @@ Apply the same 1 / multiple / none logic above.
 
 Check for existing `--text-*` variables in the target file:
 
-```bash
-grep -n "\-\-text-" {target file} 2>/dev/null || echo "none"
-```
+Check whether the target file contains any `--text-*` CSS variables.
 
 Display a summary of what was found:
 
@@ -393,9 +381,7 @@ If no font-size values are found in DESIGN.md, skip silently.
 
 Detect the package manager from the lockfile before reporting:
 
-```bash
-ls pnpm-lock.yaml yarn.lock package-lock.json bun.lockb 2>/dev/null | head -1
-```
+Detect the package manager by checking for a lockfile (`pnpm-lock.yaml`, `yarn.lock`, `package-lock.json`, `bun.lockb`).
 
 | Lockfile | Package manager |
 |---|---|
