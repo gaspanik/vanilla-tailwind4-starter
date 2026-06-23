@@ -165,6 +165,8 @@ Phase 2 完了後、Agent ツールで以下のプロンプトを渡してサブ
 
 `.claude/skills/tailwind-review/SKILL.md` を Read ツールで直接読み込み、記載の手順に従って実行してください。
 
+修正はすべて確認なしで自動適用してください（パイプライン内での実行のため）。
+
 > **Note:** Skill ツールで `tailwind-review` を呼び出せない場合（CWD不一致など）は、`.claude/skills/tailwind-review/SKILL.md` を直接読んで手順に従うこと。
 ```
 
