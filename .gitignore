@@ -104,9 +104,9 @@ storybook-static
 
 # Lock files (optional - keep for reproducible builds)
 # Uncomment to ignore lock files in personal projects
-# pnpm-lock.yaml
-# yarn.lock
-# package-lock.json
+pnpm-lock.yaml
+yarn.lock
+package-lock.json
 
 # Python-generated files
 __pycache__/
