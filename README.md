@@ -83,23 +83,11 @@ vanilla-tailwind4-starter/
 > - Claude Code のみ使う場合 → `.github/prompts/` を削除
 > - GitHub Copilot のみ使う場合 → `.claude/` を削除
 
-### ワークフロー全体を一括実行
-
-| | Claude Code | GitHub Copilot |
-|---|---|---|
-| コマンド | `/figma-workflow <Figma URL>` | `/co-figma-workflow <Figma URL>` |
-
-実装 → レビューの2フェーズをサブエージェントが自動で順番に実行します。
-
-> **注意**: 縦に長いランディングページなど大きなフレームは、セクション単位（Hero, Features, CTA など）に分割して実行してください。
-
 ### 使い分け
 
 | シーン | Claude Code | GitHub Copilot |
 |---|---|---|
 | 初回（デモコンテンツをクリア） | `/figma:setup-env` | `/co-setup-env` |
-| Figma → コード（全自動） | `/figma-workflow <URL>` | `/co-figma-workflow <URL>` |
-| 2ページ目以降 | `/figma-workflow <URL> about.html` | `/co-figma-workflow <URL> about.html` |
 | 実装だけやり直したい | `/figma:implement-figma <URL>` | `/co-implement-figma <URL>` |
 | レビューだけやり直したい | `/figma:review-figma <URL>` | `/co-review-figma <URL>` |
 | UIモックアップを作成 | 自動（スキル） | `/co-create-mockup` |
@@ -124,8 +112,11 @@ Figma Variables と `src/style.css` の `@theme` トークンを双方向に同�
 # 1. デモコンテンツをクリア（初回のみ）
 /figma:setup-env
 
-# 2. Figma デザインを実装してレビューまで自動実行
-/figma-workflow <Figma URL>
+# 2. Figma デザインを実装
+/figma:implement-figma <Figma URL>
+
+# 3. 実装とデザインを比較してレビュー・修正
+/figma:review-figma <Figma URL>
 ```
 
 **GitHub Copilot（VS Code）:**
@@ -134,8 +125,11 @@ Figma Variables と `src/style.css` の `@theme` トークンを双方向に同�
 # 1. デモコンテンツをクリア（初回のみ）
 /co-setup-env
 
-# 2. Figma デザインを実装してレビューまで自動実行
-/co-figma-workflow <Figma URL>
+# 2. Figma デザインを実装
+/co-implement-figma <Figma URL>
+
+# 3. 実装とデザインを比較してレビュー・修正
+/co-review-figma <Figma URL>
 ```
 
 ## 📄 マルチページビルド
