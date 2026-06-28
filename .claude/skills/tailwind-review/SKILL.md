@@ -239,11 +239,10 @@ Skip this check for HTML and Vue files.
 
 ```bash
 # Check if clsx / tailwind-merge / class-variance-authority are in package.json
-grep -E '"clsx"|"tailwind-merge"|"class-variance-authority"' package.json
+node -e "const p=JSON.parse(require('fs').readFileSync('package.json','utf8'));const d={...p.dependencies,...p.devDependencies};['clsx','tailwind-merge','class-variance-authority'].forEach(k=>d[k]&&console.log(k+': '+d[k]))"
 
-# Check if cn() / clsx() are already used in code
-grep -r "cn(" --include="*.tsx" --include="*.ts" --include="*.astro" src/ | grep -v "node_modules" | head -5
-grep -r "clsx(" --include="*.tsx" --include="*.ts" --include="*.astro" src/ | grep -v "node_modules" | head -5
+# Check if cn() / clsx() are already used in code (up to 5 hits)
+node -e "const fs=require('fs'),path=require('path');const EXTS=['.tsx','.ts','.astro'],SKIP=['node_modules'];function walk(d){if(!fs.existsSync(d))return[];return fs.readdirSync(d,{withFileTypes:true}).flatMap(e=>{const p=path.join(d,e.name);return SKIP.some(s=>p.includes(s))?[]:e.isDirectory()?walk(p):EXTS.some(x=>e.name.endsWith(x))?[p]:[]});}let hits=0;for(const f of walk('src')){const ls=fs.readFileSync(f,'utf8').split('\n');for(const[i,l]of ls.entries()){if(hits>=5)break;if(/\bcn\(|\bclsx\(/.test(l)){console.log(f+':'+(i+1)+': '+l.trim());hits++;}}}"
 ```
 
 **Step 2: Respond based on status**
@@ -322,17 +321,8 @@ Full conversion tables are in **`references/v3-to-v4.md`** (in this skill's dire
 ### Detection
 
 ```bash
-# Grep for deprecated classes in bulk
-grep -rn \
-  -e "space-x-" -e "space-y-" \
-  -e "flex-shrink" -e "flex-grow" \
-  -e "bg-opacity-" -e "text-opacity-" -e "border-opacity-" \
-  -e "ring-opacity-" -e "divide-opacity-" -e "placeholder-opacity-" \
-  -e "overflow-ellipsis" -e "outline-none" \
-  -e "bg-gradient-to-" \
-  -e "\!flex\b" -e "\!block\b" -e "\!hidden\b" \
-  --include="*.html" --include="*.tsx" --include="*.jsx" --include="*.vue" --include="*.astro" \
-  . | grep -v "node_modules" | grep -v "dist"
+# Search for deprecated v3 classes in bulk
+node -e "const fs=require('fs'),path=require('path');const EXTS=['.html','.tsx','.jsx','.vue','.astro'],SKIP=['node_modules','dist'];const PATS=[/space-x-/,/space-y-/,/flex-shrink/,/flex-grow/,/bg-opacity-/,/text-opacity-/,/border-opacity-/,/ring-opacity-/,/divide-opacity-/,/placeholder-opacity-/,/overflow-ellipsis/,/outline-none/,/bg-gradient-to-/,/!flex\b/,/!block\b/,/!hidden\b/];function walk(d){return fs.readdirSync(d,{withFileTypes:true}).flatMap(e=>{const p=path.join(d,e.name);return SKIP.some(s=>p.includes(s))?[]:e.isDirectory()?walk(p):EXTS.some(x=>e.name.endsWith(x))?[p]:[]});}let hits=0;for(const f of walk('.')){const ls=fs.readFileSync(f,'utf8').split('\n');ls.forEach((l,i)=>{if(PATS.some(r=>r.test(l))){console.log(f+':'+(i+1)+': '+l.trim());hits++;}});}if(!hits)console.log('(no matches)');"
 ```
 
 For scale shifts (shadow/blur/rounded), grep for `shadow\b`, `blur\b`, `rounded\b`, `shadow-sm\b`, etc. and visually inspect.
@@ -518,7 +508,7 @@ Only apply `w-[N/M]` → `w-N/M` when both N and M are plain integers (standard 
 **Detection:**
 
 ```bash
-grep -rn -e "aspect-\[" -e "w-\[[0-9]" --include="*.html" --include="*.tsx" --include="*.jsx" --include="*.vue" --include="*.astro" . | grep -v "node_modules" | grep -v "dist"
+node -e "const fs=require('fs'),path=require('path');const EXTS=['.html','.tsx','.jsx','.vue','.astro'],SKIP=['node_modules','dist'];const RE=[/aspect-\[/,/w-\[[0-9]/];function walk(d){return fs.readdirSync(d,{withFileTypes:true}).flatMap(e=>{const p=path.join(d,e.name);return SKIP.some(s=>p.includes(s))?[]:e.isDirectory()?walk(p):EXTS.some(x=>e.name.endsWith(x))?[p]:[]});}let hits=0;for(const f of walk('.')){const ls=fs.readFileSync(f,'utf8').split('\n');ls.forEach((l,i)=>{if(RE.some(r=>r.test(l))){console.log(f+':'+(i+1)+': '+l.trim());hits++;}});}if(!hits)console.log('(no matches)');"
 ```
 
 > **Note:** Only simplify `N/M` ratio patterns inside brackets. Keep all other arbitrary values as-is.
@@ -545,7 +535,7 @@ grep -rn -e "aspect-\[" -e "w-\[[0-9]" --include="*.html" --include="*.tsx" --in
 **Detection:** find `text-xs` that is **not** accompanied by any `leading-*` class on the same element.
 
 ```bash
-grep -rn "text-xs" --include="*.html" --include="*.tsx" --include="*.jsx" --include="*.vue" --include="*.astro" . | grep -v "node_modules" | grep -v "dist"
+node -e "const fs=require('fs'),path=require('path');const EXTS=['.html','.tsx','.jsx','.vue','.astro'],SKIP=['node_modules','dist'];function walk(d){return fs.readdirSync(d,{withFileTypes:true}).flatMap(e=>{const p=path.join(d,e.name);return SKIP.some(s=>p.includes(s))?[]:e.isDirectory()?walk(p):EXTS.some(x=>e.name.endsWith(x))?[p]:[]});}let hits=0;for(const f of walk('.')){const ls=fs.readFileSync(f,'utf8').split('\n');ls.forEach((l,i)=>{if(l.includes('text-xs')){console.log(f+':'+(i+1)+': '+l.trim());hits++;}});}if(!hits)console.log('(no matches)');"
 ```
 
 Then filter results where no `leading-` class is present on the same element.

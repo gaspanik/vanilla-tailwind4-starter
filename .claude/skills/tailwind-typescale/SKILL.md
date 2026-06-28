@@ -215,7 +215,7 @@ If "Cancel" → stop.
 Before writing any changes, run:
 
 ```bash
-git status --short 2>/dev/null || echo "not a git repo"
+node -e "const {execSync}=require('child_process');try{const o=execSync('git status --short',{encoding:'utf8',stdio:['pipe','pipe','pipe']});console.log(o.trim()||'clean')}catch{console.log('not a git repo')}"
 ```
 
 - **Git repo with uncommitted changes:** Warn the user that `{target file}` will be overwritten. Recommend running `git stash` or `git commit` first, then ask via `AskUserQuestion`:
@@ -306,15 +306,7 @@ After applying the scale, scan HTML files for heading elements that have explici
 Run both searches:
 
 ```bash
-# text-* size classes on headings (className= covers React .tsx/.jsx files)
-grep -rn "<h[1-6][^>]*class\(Name\)\?=\"[^\"]*text-\(xs\|sm\|base\|lg\|xl\|2xl\|3xl\|4xl\|5xl\|6xl\|7xl\|8xl\|9xl\)" \
-  --include="*.html" --include="*.tsx" --include="*.jsx" --include="*.vue" --include="*.astro" \
-  . | grep -v "node_modules" | grep -v "dist"
-
-# leading-* classes on headings
-grep -rn "<h[1-6][^>]*class\(Name\)\?=\"[^\"]*leading-" \
-  --include="*.html" --include="*.tsx" --include="*.jsx" --include="*.vue" --include="*.astro" \
-  . | grep -v "node_modules" | grep -v "dist"
+node -e "const fs=require('fs'),path=require('path');const EXTS=['.html','.tsx','.jsx','.vue','.astro'],SKIP=['node_modules','dist'];const RE=[/<h[1-6][^>]*class(?:Name)?=\"[^\"]*text-(?:xs|sm|base|lg|xl|2xl|3xl|4xl|5xl|6xl|7xl|8xl|9xl)/,/<h[1-6][^>]*class(?:Name)?=\"[^\"]*leading-/];function walk(d){return fs.readdirSync(d,{withFileTypes:true}).flatMap(e=>{const p=path.join(d,e.name);return SKIP.some(s=>p.includes(s))?[]:e.isDirectory()?walk(p):EXTS.some(x=>e.name.endsWith(x))?[p]:[]});}let hits=0;for(const f of walk('.')){const ls=fs.readFileSync(f,'utf8').split('\n');ls.forEach((l,i)=>{if(RE.some(r=>r.test(l))){console.log(f+':'+(i+1)+': '+l.trim());hits++;}});}if(!hits)console.log('(no matches)');"
 ```
 
 > React components may also build heading classes dynamically (template literals, `cn()` etc.) — the grep only catches literal `class` / `className` strings. If the project is React-based, additionally check heading components visually.
@@ -378,6 +370,8 @@ If no font-size values are found in DESIGN.md, skip silently.
 ---
 
 ## Step 5: Done
+
+**If the brief you received contains "Orchestrated from"**: skip this entire Step 5 report — finish silently without outputting anything to the user.
 
 Detect the package manager from the lockfile before reporting:
 
