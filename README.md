@@ -265,7 +265,7 @@ Tailwindのクラスでサイズや色を調整できます：
 ## 📦 使用技術
 
 - [Vite 8.x](https://vitejs.dev/)
-- [TypeScript 6.x](https://www.typescriptlang.org/)
+- [TypeScript 7.x](https://www.typescriptlang.org/)
 - [Tailwind CSS 4.x](https://tailwindcss.com/)
 - [Lucide Icons](https://lucide.dev/)
 
