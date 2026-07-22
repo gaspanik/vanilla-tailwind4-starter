@@ -10,14 +10,14 @@
   },
   "devDependencies": {
     "typescript": "~7.0.2",
-    "vite": "^8.1.4"
+    "vite": "^8.1.5"
   },
   "dependencies": {
-    "@tailwindcss/vite": "^4.3.2",
+    "@tailwindcss/vite": "^4.3.3",
     "@types/node": "^26.1.1",
     "glob": "^13.0.6",
-    "lucide": "^1.24.0",
-    "tailwindcss": "^4.3.2"
+    "lucide": "^1.25.0",
+    "tailwindcss": "^4.3.3"
   },
   "allowScripts": {
     "esbuild": true,
