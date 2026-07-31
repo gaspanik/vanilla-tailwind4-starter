@@ -38,8 +38,7 @@ HTML ではケバブケースで使用します：`<i data-lucide="icon-name"></
 - `<head>` 内に CDN フォント（[Gen Interface JP](https://github.com/yamatoiizuka/gen-interface-jp)）を読み込む `<link>` タグ：
 
   ```html
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/gen-interface-jp@latest/all.css" />
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/gen-interface-jp@latest/display-all.css" />
+ <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/gen-interface-jp@0.8.0/cdn/all.css" />
   ```
 
 - `<body>` の末尾にエントリーポイントの `<script type="module" src="/src/main.ts"></script>`
