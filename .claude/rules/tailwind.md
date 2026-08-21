@@ -4,21 +4,21 @@ paths:
   - "src/**/*.{ts,css}"
 ---
 
-# Tailwind CSS v4 ルール
+# Tailwind CSS v4 Rules
 
-`@tailwindcss/vite` プラグインで動作します。設定は CSS ベース — `tailwind.config.js` は作成しないこと。グローバルスタイルは `src/style.css`（`@import "tailwindcss"` + `@theme` トークン）。
+Runs via the `@tailwindcss/vite` plugin. Config is CSS-based — never create `tailwind.config.js`. Global styles live in `src/style.css` (`@import "tailwindcss"` plus `@theme` tokens).
 
-## v4 構文のみ使用する
+## v4 syntax only
 
-v3 固有のユーティリティは生成・提案しない。リファクタリング時は変換すること：
+Never generate or suggest v3-specific utilities. Convert them when refactoring:
 
-- ❌ `space-x-*` / `space-y-*` → ✅ flex/grid と `gap-*` を組み合わせる
-- ❌ `divide-*` → ✅ 個々の子要素にボーダーを付ける
+- ❌ `space-x-*` / `space-y-*` → ✅ combine `gap-*` with flex/grid
+- ❌ `divide-*` → ✅ borders on individual children
 
-## 数値とトークン
+## Values and tokens
 
-- **標準スケールを優先**（1単位 = 4px）：`gap-2`（8px）、`p-4`（16px）、`w-80`（320px）。任意値（`w-[42px]`）はデザイン上どうしても必要な場合の最終手段で、複数箇所で使うなら `@theme` トークンに追加する
-- **カラーは `@theme` トークンで一元管理**：`neutral-*` や `gray-*` などの Tailwind スケールを直接使わず、ダーク背景用・ホバー用など用途別にトークンを定義する：
+- **Prefer the standard scale** (1 unit = 4px): `gap-2` (8px), `p-4` (16px), `w-80` (320px). Arbitrary values (`w-[42px]`) are a last resort for design-mandated exact values — add a `@theme` token if used more than once
+- **Manage colors centrally as `@theme` tokens**: don't use Tailwind scale colors like `neutral-*` or `gray-*` directly — define purpose-specific tokens (dark background, hover, etc.):
 
 ```css
 /* src/style.css */
@@ -26,9 +26,9 @@ v3 固有のユーティリティは生成・提案しない。リファクタ�
   --color-dark: #111111;
   --color-dark-hover: #262626;
   --color-muted: #666666;
-  --color-muted-dark: #a3a3a3;   /* ダーク背景上のサブテキスト */
+  --color-muted-dark: #a3a3a3;   /* secondary text on dark backgrounds */
   --color-border: #e5e5e5;
-  --color-border-dark: #404040;  /* ダーク背景上のボーダー */
+  --color-border-dark: #404040;  /* borders on dark backgrounds */
 }
 ```
 
@@ -36,47 +36,47 @@ v3 固有のユーティリティは生成・提案しない。リファクタ�
 <!-- ❌ <p class="text-neutral-400">   →   ✅ <p class="text-muted-dark"> -->
 ```
 
-- レスポンシブは標準ブレークポイント（`sm:`、`md:`、`lg:`、`xl:`、`2xl:`）を使用
+- Use standard breakpoints for responsive design (`sm:`, `md:`, `lg:`, `xl:`, `2xl:`)
 
-## スタイリング方針
+## Styling policy
 
-- **Tailwind ファースト**：CSS モジュールや外部 CSS は使わず、クラスは HTML の `class` 属性に直接記述する
+- **Tailwind-first**: no CSS modules or external stylesheets — write classes directly in the HTML `class` attribute
 
-## フォントファミリー
+## Font family
 
-`--default-font-family` は `@theme` で body のデフォルトに、`--heading-font-family` は `@layer base` で h1–h6 に適用済みです（いずれも `src/style.css`）。以下のクラスは冗長なので書かないこと：
+`--default-font-family` is applied to the body default via `@theme`, and `--heading-font-family` is already applied to h1–h6 via `@layer base` (both in `src/style.css`). Never write these redundant classes:
 
 - `font-[var(--heading-font-family)]` / `font-(--heading-font-family)`
 - `font-[var(--default-font-family)]` / `font-(--default-font-family)`
 
-見出し以外の要素（ロゴの `<a>` など）に見出しフォントが必要な場合は、`@layer base` にセレクタを追加するか `@theme` に専用ユーティリティを定義する。
+If a non-heading element (e.g. a logo `<a>`) needs the heading font, add a selector to `@layer base` or define a dedicated utility in `@theme`.
 
-## 共有クラスの集約（`*:` バリアント）
+## Shared class consolidation (`*:` variant)
 
-3つ以上の兄弟要素が同じクラスを2つ以上持つ場合、親要素に `*:` バリアントでまとめる（直接の子要素にのみ適用、孫要素には影響しない）：
+When 3+ sibling elements share 2+ classes, consolidate onto the parent with the `*:` variant (applies to direct children only, not grandchildren):
 
 ```html
-<!-- ❌ 避ける -->
+<!-- ❌ Avoid -->
 <ul>
   <li><a href="#about" class="hover:text-white">About</a></li>
   <li><a href="#works" class="hover:text-white">Works</a></li>
   <li><a href="#contact" class="hover:text-white">Contact</a></li>
 </ul>
 
-<!-- ✅ 正しい -->
+<!-- ✅ Correct -->
 <ul class="*:hover:text-white">
   ...
 </ul>
 ```
 
-## アクセシビリティ
+## Accessibility
 
-- 役割が合致する場合は `div`/`span` より意味を持つタグを優先する：`header`、`nav`、`main`、`section`、`article`、`footer`
-- `<img>` には必ず `alt` を付ける。意味のある画像は説明的なテキストを、装飾目的のみの画像は `alt=""` を指定する
-- `<button>` には必ず明示的な `type="button"` を付ける（フォーム送信用なら `"submit"`）。`type` 省略時は `<form>` 内で `"submit"` 扱いになりバグの原因になりやすい
-- フォームの入力要素には対応する `<label for>` を付ける（視覚的に隠す場合は `aria-label`）
-- 開閉式メニューボタンには `aria-expanded`、`aria-controls`、説明的な `aria-label` を設定する
-- HTML に直接大文字で書かず、`uppercase` クラスでスタイルとして適用する。テキスト自体は先頭大文字・残り小文字で記述（スクリーンリーダーが1文字ずつ読み上げるのを防ぐため。ブランド名などの固有名詞はそのままでよい）：
+- Prefer semantic tags over `div`/`span` where the role matches: `header`, `nav`, `main`, `section`, `article`, `footer`
+- Every `<img>` needs `alt` — descriptive text for meaningful images, `alt=""` for purely decorative ones
+- Every `<button>` needs an explicit `type="button"` (or `"submit"` for form submission). An omitted type defaults to `"submit"` inside `<form>`, a common source of bugs
+- Every form input has an associated `<label for>` (or `aria-label` if visually hidden)
+- Collapsible/menu buttons: set `aria-expanded`, `aria-controls`, and a descriptive `aria-label`
+- Never write text in ALL CAPS directly in markup — write proper case and apply the `uppercase` class as a style (screen readers may spell out capitalized text letter by letter; brand names and proper nouns are exempt):
 
 ```html
 <!-- ❌ <a href="#about">ABOUT</a> -->

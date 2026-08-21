@@ -1,144 +1,144 @@
 # Vite + Vanilla TypeScript + Tailwind CSS v4
 
-ViteとTailwind CSS v4を使用したシンプルなVanilla TypeScriptプロジェクトのテンプレートです。
+A simple Vanilla TypeScript project template using Vite and Tailwind CSS v4.
 
-## 🚀 特徴
+## 🚀 Features
 
-- ⚡️ [Vite](https://vitejs.dev/) - 高速な開発サーバーとビルドツール
-- 🎨 [Tailwind CSS v4](https://tailwindcss.com/) - ユーティリティファーストのCSSフレームワーク
-- 📦 [Lucide Icons](https://lucide.dev/) - 美しいオープンソースアイコンライブラリ
-- 🔷 [TypeScript](https://www.typescriptlang.org/) - 型安全なJavaScript
-- 📄 複数HTMLページ対応 - プロジェクトルートの全HTMLファイルを自動ビルド
+- ⚡️ [Vite](https://vitejs.dev/) - fast dev server and build tool
+- 🎨 [Tailwind CSS v4](https://tailwindcss.com/) - utility-first CSS framework
+- 📦 [Lucide Icons](https://lucide.dev/) - a beautiful open-source icon library
+- 🔷 [TypeScript](https://www.typescriptlang.org/) - type-safe JavaScript
+- 📄 Multi-page HTML support - automatically builds every HTML file at the project root
 
-## 📋 必要要件
+## 📋 Requirements
 
-- Node.js 22.x 以上
+- Node.js 22.x or later
 
-## 🛠️ セットアップ
-`<pm>` はお使いのパッケージマネージャーに置き換えてください（例: `npm`, `yarn`, `pnpm`）。
+## 🛠️ Setup
+Replace `<pm>` with your package manager (e.g. `npm`, `yarn`, `pnpm`).
 
-### 依存関係のインストール
+### Install dependencies
 
 ```bash
 <pm> install
 ```
 
-## 🏃 実行方法
+## 🏃 Running
 
-### 開発サーバーの起動
+### Start the dev server
 
 ```bash
 <pm> run dev
 ```
 
-ブラウザで [http://localhost:5173](http://localhost:5173) を開きます。
+Open [http://localhost:5173](http://localhost:5173) in your browser.
 
-### 本番用ビルド
+### Production build
 
 ```bash
 <pm> run build
 ```
 
-TypeScriptの型チェック後、ビルド結果は `dist` ディレクトリに出力されます。
+After a TypeScript type check, the build output is written to the `dist` directory.
 
-### ビルドのプレビュー
+### Preview the build
 
 ```bash
 <pm> run preview
 ```
 
-## 📁 プロジェクト構成
+## 📁 Project Structure
 
 ```
 vanilla-tailwind4-starter/
-├── index.html         # トップページ
-├── about.html         # Aboutページ
-├── public/            # 静的ファイル
+├── index.html         # Top page
+├── about.html         # About page
+├── public/            # Static files
 │   ├── favicon.svg
 │   └── icons.svg
 ├── src/
-│   ├── assets/        # 画像などのアセット
-│   ├── main.ts        # エントリーポイント
-│   └── style.css      # Tailwind CSSのインポート
-├── .claude/           # Claude Code 設定
-│   ├── commands/      # スラッシュコマンド
-│   └── skills/        # スキル
-├── .github/           # GitHub 設定
-│   ├── prompts/           # Copilot カスタムプロンプト
-│   └── copilot-instructions.md # Copilot 指示ファイル
-├── CLAUDE.md          # Claude Code プロジェクト指示
-├── tsconfig.json      # TypeScript設定
-├── vite.config.ts     # Vite設定（マルチページビルド対応）
-├── package.json       # 依存関係とスクリプト
-├── .editorconfig      # エディタ設定
+│   ├── assets/        # Assets such as images
+│   ├── main.ts        # Entry point
+│   └── style.css      # Tailwind CSS import
+├── .claude/           # Claude Code config
+│   ├── commands/      # Slash commands
+│   └── skills/        # Skills
+├── .github/           # GitHub config
+│   ├── prompts/           # Copilot custom prompts
+│   └── copilot-instructions.md # Copilot instruction file
+├── CLAUDE.md          # Claude Code project instructions
+├── tsconfig.json      # TypeScript config
+├── vite.config.ts     # Vite config (multi-page build support)
+├── package.json       # Dependencies and scripts
+├── .editorconfig      # Editor config
 ├── .gitignore
-└── README.md          # このファイル
+└── README.md          # This file
 ```
 
-## 🤖 AI コマンド
+## 🤖 AI Commands
 
-[Claude Code](https://claude.ai/code) と [GitHub Copilot](https://github.com/features/copilot)（VS Code）の両方で、Figma デザインをコードに変換するコマンドが利用できます。また、Figma を使わずに Tailwind CSS でUIモックアップを作成する `create-mockup` コマンドも利用できます。
+Commands for converting Figma designs into code are available in both [Claude Code](https://claude.ai/code) and [GitHub Copilot](https://github.com/features/copilot) (VS Code). A `create-mockup` command is also available for building Tailwind CSS UI mockups without Figma.
 
-> **💡 使用するエージェントに合わせて不要なディレクトリを削除してください：**
-> - Claude Code のみ使う場合 → `.github/prompts/` を削除
-> - GitHub Copilot のみ使う場合 → `.claude/` を削除
+> **💡 Delete whichever directory you don't need, based on the agent you use:**
+> - Claude Code only → delete `.github/prompts/`
+> - GitHub Copilot only → delete `.claude/`
 
-### 使い分け
+### Which command to use
 
-| シーン | Claude Code | GitHub Copilot |
+| Scenario | Claude Code | GitHub Copilot |
 |---|---|---|
-| 初回（デモコンテンツをクリア） | `/figma:setup-env` | `/co-setup-env` |
-| 実装だけやり直したい | `/figma:implement-figma <URL>` | `/co-implement-figma <URL>` |
-| レビューだけやり直したい | `/figma:review-figma <URL>` | `/co-review-figma <URL>` |
-| UIモックアップを作成 | 自動（スキル） | `/co-create-mockup` |
+| First run (clear demo content) | `/figma:setup-env` | `/co-setup-env` |
+| Redo implementation only | `/figma:implement-figma <URL>` | `/co-implement-figma <URL>` |
+| Redo review only | `/figma:review-figma <URL>` | `/co-review-figma <URL>` |
+| Create a UI mockup | Automatic (skill) | `/co-create-mockup` |
 
-### デザイントークン管理
+### Design token management
 
-Figma Variables と `src/style.css` の `@theme` トークンを双方向に同期するスキル、および `DESIGN.md` を生成するスキルです。
+Skills that bidirectionally sync Figma Variables with the `@theme` tokens in `src/style.css`, and a skill that generates `DESIGN.md`.
 
-| スキル | 用途 |
+| Skill | Purpose |
 |---|---|
-| `/figma-to-tailwind-html <Figma URL>` | Figma Variables → `src/style.css` の `@theme` トークンに書き出す |
-| `/tailwind-to-figma-html [Figma URL]` | `src/style.css` の `@theme` トークン → Figma Variables に書き出す |
-| `/create-design-md-html [Figma URL]` | コードベースまたは Figma からデザイン仕様書 `DESIGN.md` を生成する |
+| `/figma-to-tailwind-html <Figma URL>` | Export Figma Variables into `@theme` tokens in `src/style.css` |
+| `/tailwind-to-figma-html [Figma URL]` | Export `@theme` tokens from `src/style.css` into Figma Variables |
+| `/create-design-md-html [Figma URL]` | Generate a `DESIGN.md` design spec from the codebase or from Figma |
 
-`/tailwind-to-figma-html` と `/create-design-md-html` の引数は省略可能です。省略した場合、`/tailwind-to-figma-html` は新規 Figma ファイル「Design Tokens」を作成し、`/create-design-md-html` はコードベースを探索するかソースを選択するよう案内します。
+The arguments to `/tailwind-to-figma-html` and `/create-design-md-html` are optional. If omitted, `/tailwind-to-figma-html` creates a new Figma file named "Design Tokens", and `/create-design-md-html` prompts you to either explore the codebase or choose a source.
 
-### 標準フロー
+### Standard flow
 
 **Claude Code:**
 
 ```
-# 1. デモコンテンツをクリア（初回のみ）
+# 1. Clear demo content (first run only)
 /figma:setup-env
 
-# 2. Figma デザインを実装
+# 2. Implement the Figma design
 /figma:implement-figma <Figma URL>
 
-# 3. 実装とデザインを比較してレビュー・修正
+# 3. Compare the implementation against the design and fix it
 /figma:review-figma <Figma URL>
 ```
 
-**GitHub Copilot（VS Code）:**
+**GitHub Copilot (VS Code):**
 
 ```
-# 1. デモコンテンツをクリア（初回のみ）
+# 1. Clear demo content (first run only)
 /co-setup-env
 
-# 2. Figma デザインを実装
+# 2. Implement the Figma design
 /co-implement-figma <Figma URL>
 
-# 3. 実装とデザインを比較してレビュー・修正
+# 3. Compare the implementation against the design and fix it
 /co-review-figma <Figma URL>
 ```
 
-## 📄 マルチページビルド
+## 📄 Multi-page Build
 
-このプロジェクトは複数のHTMLページを自動的にビルドするよう設定されています。
+This project is configured to automatically build multiple HTML pages.
 
-### HTMLページの追加方法
+### Adding an HTML page
 
-プロジェクトのルートディレクトリに新しいHTMLファイルを追加するだけで、自動的にビルド対象に含まれます：
+Just add a new HTML file to the project root directory, and it's automatically included in the build:
 
 ```
 vanilla-tailwind4-starter/
@@ -148,7 +148,7 @@ vanilla-tailwind4-starter/
 └── ...
 ```
 
-ビルド結果:
+Build output:
 ```
 dist/
 ├── index.html
@@ -156,9 +156,9 @@ dist/
 └── contact.html
 ```
 
-### 仕組み
+### How it works
 
-`vite.config.ts`で[glob](https://www.npmjs.com/package/glob)を使用して、プロジェクトルート直下の全ての`*.html`ファイルを検出し、Viteのマルチページビルドに登録しています。
+`vite.config.ts` uses [glob](https://www.npmjs.com/package/glob) to detect every `*.html` file directly under the project root and registers them with Vite's multi-page build.
 
 ```typescript
 const files = glob.sync('*.html')
@@ -170,56 +170,56 @@ const input = Object.fromEntries(
 )
 ```
 
-開発時は通常通り各HTMLファイルに直接アクセスできます：
+During development you can access each HTML file directly as usual:
 - `http://localhost:5173/` - index.html
 - `http://localhost:5173/about.html` - about.html
 
-## 🔷 TypeScript の使い方
+## 🔷 Using TypeScript
 
-エントリーポイントは `src/main.ts` です。`@` エイリアスで `src/` ディレクトリを参照できます：
+The entry point is `src/main.ts`. The `@` alias refers to the `src/` directory:
 
 ```typescript
 import { something } from '@/utils'
 ```
 
-型チェックはビルド時に自動実行されます（`tsc && vite build`）。開発中に型エラーを確認したい場合：
+Type checking runs automatically at build time (`tsc && vite build`). To check for type errors during development:
 
 ```bash
 <pm> exec tsc --noEmit
 ```
 
-## 🎨 Tailwind CSS v4 の使い方
+## 🎨 Using Tailwind CSS v4
 
-このプロジェクトではTailwind CSS v4を使用しています。v4では`@tailwindcss/vite`プラグインを使用するため、従来の`postcss.config.js`や`tailwind.config.js`は不要です。
+This project uses Tailwind CSS v4. Since v4 uses the `@tailwindcss/vite` plugin, the traditional `postcss.config.js` and `tailwind.config.js` are not needed.
 
-### 設定ファイル
+### Config files
 
-- **vite.config.ts** - Tailwind Viteプラグインを設定
-- **src/style.css** - `@import "tailwindcss";`でTailwindをインポート
+- **vite.config.ts** - configures the Tailwind Vite plugin
+- **src/style.css** - imports Tailwind via `@import "tailwindcss";`
 
-### HTMLでの使用例
+### Example usage in HTML
 
 ```html
 <div class="flex items-center gap-2">
   <h1 class="font-medium text-neutral-900 text-2xl">Hello Tailwind!</h1>
-  <p class="text-neutral-600">ユーティリティクラスを使って簡単にスタイリング</p>
+  <p class="text-neutral-600">Easy styling with utility classes</p>
 </div>
 ```
 
-## 🎭 Lucide Icons の使い方
+## 🎭 Using Lucide Icons
 
-[Lucide](https://lucide.dev/)は、美しくカスタマイズ可能なオープンソースのアイコンライブラリです。このプロジェクトでは軽量な実装が可能です。
+[Lucide](https://lucide.dev/) is a beautiful, customizable open-source icon library. This project supports a lightweight implementation.
 
-### 基本的な使い方
+### Basic usage
 
-#### 1. TypeScriptでアイコンをインポート
+#### 1. Import icons in TypeScript
 
-使用したいアイコンを`src/main.ts`でインポートして初期化します：
+Import and initialize the icons you want to use in `src/main.ts`:
 
 ```typescript
 import { createIcons, IceCreamCone, Heart, Star } from 'lucide'
 
-// 使用するアイコンだけをインポート（バンドルサイズを最小化）
+// Import only the icons you use (minimizes bundle size)
 createIcons({ 
   icons: { 
     IceCreamCone,
@@ -229,9 +229,9 @@ createIcons({
 })
 ```
 
-#### 2. HTMLで`data-lucide`属性を使用
+#### 2. Use the `data-lucide` attribute in HTML
 
-HTMLで`data-lucide`属性を持つ要素を配置します：
+Place elements with a `data-lucide` attribute in your HTML:
 
 ```html
 <i data-lucide="ice-cream-cone"></i>
@@ -239,14 +239,14 @@ HTMLで`data-lucide`属性を持つ要素を配置します：
 <i data-lucide="star"></i>
 ```
 
-アイコン名はキャメルケースをケバブケースに変換します：
+Icon names are converted from PascalCase to kebab-case:
 - `IceCreamCone` → `ice-cream-cone`
 - `Heart` → `heart`
 - `ArrowRight` → `arrow-right`
 
-### アイコンのカスタマイズ
+### Customizing icons
 
-Tailwindのクラスでサイズや色を調整できます：
+Adjust size and color with Tailwind classes:
 
 ```html
 <div class="flex items-center gap-2">
@@ -255,20 +255,20 @@ Tailwindのクラスでサイズや色を調整できます：
 </div>
 ```
 
-### 利用可能なアイコン
+### Available icons
 
-[Lucide公式サイト](https://lucide.dev/icons/)で1,500以上のアイコンを検索できます。使用したいアイコンを見つけたら：
+Search over 1,500 icons on the [Lucide website](https://lucide.dev/icons/). Once you find one you want to use:
 
-1. アイコン名をパスカルケースで`main.ts`にインポート
-2. HTMLでケバブケースの名前を`data-lucide`属性に指定
+1. Import the icon name in PascalCase in `main.ts`
+2. Specify the kebab-case name in the `data-lucide` attribute in HTML
 
-## 📦 使用技術
+## 📦 Tech Used
 
 - [Vite 8.x](https://vitejs.dev/)
 - [TypeScript 7.x](https://www.typescriptlang.org/)
 - [Tailwind CSS 4.x](https://tailwindcss.com/)
 - [Lucide Icons](https://lucide.dev/)
 
-## 📝 ライセンス
+## 📝 License
 
 MIT
