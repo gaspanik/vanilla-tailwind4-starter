@@ -12,7 +12,8 @@ description: >
   · Asked to check HTML accessibility structure: `aria-label`, `ul/li`, `button type`, `label`, etc.
   · Asked to review `.html`, `.tsx`, `.jsx`, `.vue`, or `.astro` files (if Tailwind is used)
   Framework-agnostic (HTML / React / Vue / Svelte / Astro, etc.).
-  Also use for vague requests like "something looks off with the classes", "the design changed after upgrading to v4", or "migrating from CSS modules".
+  Also use for vague requests like "something looks off with the classes" or "the design changed after upgrading to v4".
+  Scope: code that is already written in Tailwind. For migrating a codebase that isn't using Tailwind yet (plain CSS, Sass/SCSS) onto Tailwind for the first time, use `css-to-tailwind` instead.
 ---
 
 # Tailwind CSS Code Review & Optimization Skill
@@ -20,6 +21,8 @@ description: >
 ## Overview
 
 This skill reviews Tailwind CSS code across 5 dimensions and provides improvement suggestions or applies automatic fixes.
+
+By default this skill runs standalone and asks its own questions (Tailwind version handling, review scope) interactively. It can also be invoked by an orchestrator — if the brief you received contains **"Orchestrated from \<skill-name\>."**, skip any of the questions below for which the brief *also* supplies the answer (e.g. "review the whole project, Tailwind v4, apply all fixes without asking"), and use the supplied value instead. If the brief doesn't specify a particular answer, still ask that one normally — don't guess.
 
 ---
 
@@ -84,7 +87,7 @@ This determines how Dimension 2 (v3→v4 migration check) is handled.
 
 ---
 
-**If v3 is detected → ask via `AskUserQuestion`:**
+**If v3 is detected → ask via `AskUserQuestion`** (unless an orchestrated brief already states whether to review-only or migrate — use that instead):
 
 > "Tailwind CSS v3 detected. How would you like to proceed?"
 >
@@ -102,7 +105,7 @@ If v3 patterns are found in a v4 project, report them as bugs.
 
 ---
 
-**If unknown → ask via `AskUserQuestion`:**
+**If unknown → ask via `AskUserQuestion`** (unless an orchestrated brief already states the version — use that instead):
 
 > "Could not determine the Tailwind version. Which are you using?"
 >
@@ -134,7 +137,7 @@ Detect section boundaries in this priority order:
 3. `<!-- ... -->` comment-delimited blocks
 4. Semantic elements: `<header>` / `<main>` / `<footer>` / `<nav>`
 
-Output the section list as plain text first, then use `AskUserQuestion` to ask the user which range to review.
+Output the section list as plain text first, then use `AskUserQuestion` to ask the user which range to review — unless an orchestrated brief already states the scope (e.g. "review the whole project"), in which case skip the question and use that scope directly.
 
 **Text output example (must appear before AskUserQuestion):**
 
@@ -448,7 +451,15 @@ Figma MCP often writes font names directly as arbitrary values. Detect these pat
 
 When arbitrary px / em / rem values are found, read **`references/scale-tables.md`** (in this skill's directory) for the full conversion tables — font size, line height, letter spacing, font weight, and spacing/sizing — and suggest the closest scale utility. If the value falls between steps, mention both neighbours and ask the user to confirm.
 
-> **Tip:** Tailwind spacing scale follows `1 unit = 4px`. Divide px by 4 — a whole number means a standard utility exists; otherwise keep the arbitrary value. For obvious cases like this, the table lookup can be skipped.
+**Do not rely on table lookup alone for spacing/sizing (`w-`, `h-`, `p-`, `m-`, `gap-`, `top-`, `left-`, etc.) — run the detection script below first.** The reference table only lists common values; in Tailwind v4 the spacing scale is computed (`calc(var(--spacing) * N)`), so values not in the table (e.g. `w-[28px]`, `gap-[52px]`) are still convertible and get missed if you only visually scan the table.
+
+**Detection (v4 projects — computes N = px / 4 for every spacing-shaped arbitrary value and flags convertible vs. non-convertible):**
+
+```bash
+node -e "const fs=require('fs'),path=require('path');const EXTS=['.html','.tsx','.jsx','.vue','.astro'],SKIP=['node_modules','dist'];const PROPS='w|h|p|pt|pb|pl|pr|px|py|m|mt|mb|ml|mr|mx|my|gap|gap-x|gap-y|top|left|right|bottom|inset|space-x|space-y|size';const RE=new RegExp('\\\\b(?:'+PROPS+')-\\\\[(-?[0-9.]+)px\\\\]','g');function walk(d){return fs.readdirSync(d,{withFileTypes:true}).flatMap(e=>{const p=path.join(d,e.name);return SKIP.some(s=>p.includes(s))?[]:e.isDirectory()?walk(p):EXTS.some(x=>e.name.endsWith(x))?[p]:[]});}let hits=0;for(const f of walk('.')){const ls=fs.readFileSync(f,'utf8').split('\n');ls.forEach((l,i)=>{let m;RE.lastIndex=0;while((m=RE.exec(l))){const px=parseFloat(m[1]);const n=px/4;const clean=Number.isInteger(n)||Math.abs(n*2-Math.round(n*2))<1e-9;console.log(f+':'+(i+1)+': '+m[0]+'  →  N='+n+(clean?'  (convertible, e.g. '+m[0].split('-[')[0]+'-'+n+')':'  (not a clean /4 step, keep arbitrary)'));hits++;}});}if(!hits)console.log('(no matches)');"
+```
+
+Every line this script marks `(convertible, ...)` must be converted to the numeric utility in the fix — do not leave it as an arbitrary value just because it wasn't in `scale-tables.md`. Lines marked `(not a clean /4 step, ...)` stay arbitrary. For v3 projects, skip this script and only convert values matching the fixed step list in `scale-tables.md`.
 
 **Report format:**
 ```
@@ -456,6 +467,11 @@ When arbitrary px / em / rem values are found, read **`references/scale-tables.m
   Issue: text-[16px] can be expressed as text-base (16px / 1rem)
   Current: class="text-[16px] leading-[1.5] tracking-[0.05em]"
   Fix:     class="text-base leading-normal tracking-wider"
+
+[Token] <filename>:<line>
+  Issue: gap-[52px] is not in the common table but is still a clean /4 step (52 / 4 = 13)
+  Current: class="gap-[52px]"
+  Fix:     class="gap-13"
 ```
 
 ---
